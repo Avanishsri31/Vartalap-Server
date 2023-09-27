@@ -1,11 +1,12 @@
-const express = require("express");
-const connectDB = require("./config/db");
-const dotenv = require("dotenv");
-const userRoutes = require("./routes/userRoutes");
-const chatRoutes = require("./routes/chatRoutes");
-const messageRoutes = require("./routes/messageRoutes");
-const { notFound, errorHandler } = require("./middleware/errorMiddleware");
-const path = require("path");
+import express from "express"
+import { connectDB }  from "./config/db.js";
+import dotenv from "dotenv";
+import userRoutes  from "./routes/userRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
+import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
+import path from "path";
+import {Server} from "socket.io";
 
 dotenv.config();
 connectDB();
@@ -50,7 +51,7 @@ const server = app.listen(
   console.log(`Server running on PORT ${PORT}...`.yellow.bold)
 );
 
-const io = require("socket.io")(server, {
+const io = new Server(server, {
   pingTimeout: 60000,
   cors: {
     origin: "http://localhost:3000",
