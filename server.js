@@ -7,6 +7,7 @@ import messageRoutes from "./routes/messageRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import path from "path";
 import {Server} from "socket.io";
+import { createServer } from "tls";
 
 dotenv.config();
 connectDB();
@@ -46,18 +47,12 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT;
 
-const server = app.listen(
-  PORT,
-  console.log(`Server running on PORT ${PORT}...`.yellow.bold)
-);
-
-const io = new Server(server, {
-  pingTimeout: 60000,
-  cors: {
-    origin: "https://vartalap31.netlify.app/",
-    // credentials: true,
-  },
+const httpServer = createServer(app);
+httpServer.listen(PORT, (req, res) => {
+  console.log(`Server running one port: ${PORT}`)
 });
+
+const io = new Server(httpServer, {cors: "https://vartalap31.netlify.app/"});
 
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
